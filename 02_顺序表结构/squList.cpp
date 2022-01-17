@@ -1,18 +1,3 @@
-# 顺序表
-* 结构定义: 一片连续的存储区域存储, 用来存储任意的元素类型,
-  每个位置用来存储任意的元素类型.
-    1. `size = 9` : 当前顺序表的总大小(最多存储 9 个元素)
-    2. `length = 5` : 当前顺序表中一共存储了多少个元素
-    3. `data_type = xxx` : 顺序表中每一个存储元素的数据类型
-* 结构操作：
-  * 插入元素
-    1. 连续的存储区发生变化
-    2. length 发生变化
-  * 删除元素
-    1. length - 1
-
-# 实现部分
-```c++
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -44,6 +29,25 @@ Vector *init(int n) {
     return vec;
 }
 
+// *********************************************
+// 扩容操作
+// *********************************************
+/*  这样写有bug
+int expand(Vector *vec) {
+    vec->size *= 2;
+    vec->data = (int *)realloc(vec->data,sizeof(int) * vec->size);
+    return 1;
+}
+*/
+
+int expand(Vector *vec) {
+    int new_size = vec->size * 2;
+    int *p = (int *)realloc(vec->data,sizeof(int) * vec->size);
+    if (p == NULL) return 0;
+    vec->size = new_size;
+    vec->data = p;
+    return 1;
+}
 
 // *********************************************
 // 顺序表的插入操作
@@ -51,7 +55,13 @@ Vector *init(int n) {
 int  insert(Vector *vec, int index, int value) {
     // 1. 合法性判断
     if (vec == NULL ) return 0;      // 不能向空的顺序表中插入
-    if (vec->length == vec->size) return 0;     // 顺序表满了
+    // 顺序表满了, 进行扩容
+    if (vec->length == vec->size) {
+        // 如果 扩容操作失败了， return 0
+        if (!expand(vec)) return 0;
+        printf("expand Vector size to %d success \n", vec-size);
+    }     
+
     if (index < 0; || index > vec->length) return 0; // 插入的位置不在顺序表中
 
     // 2. 插入位置 index 后面的元素向后移动一位
@@ -127,7 +137,7 @@ void clear(Vector *vec) {
 // main
 // *********************************************
 int main() {
-    #define MAX_OP 20 
+    #define MAX_OP 1 
     srand(time(0));
 
     // 操作类型，操作位置，操作值
@@ -153,9 +163,11 @@ int main() {
         output(vec);
     }
 
+
+
+
+
+
     return 0;
 }
 
-
-
-```
