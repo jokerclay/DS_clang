@@ -5,16 +5,15 @@
 // *********************************************
 // 将 struct Vector 这个数据类型重新命名为 Vector
 // *********************************************
+
+// 顺序表的结构定义
 typedef struct Vector {
-    // 顺序表的结构定义
-    
     // 1. 一块连续的存储区
     int *data;
 
     // 2. size, length
     int size, length;
 } Vector;
-
 
 // *********************************************
 // 结构的初始化, 初始化一个存储 n 个元素的顺序表
@@ -25,7 +24,6 @@ Vector *init(int n) {
     vec->data = (int *)malloc(sizeof(int) * n);
     vec->size = n; 
     vec->length = 0;
-
     return vec;
 }
 
@@ -59,10 +57,10 @@ int  insert(Vector *vec, int index, int value) {
     if (vec->length == vec->size) {
         // 如果 扩容操作失败了， return 0
         if (!expand(vec)) return 0;
-        printf("expand Vector size to %d success \n", vec-size);
+        printf("expand Vector size to %d success \n", vec->size);
     }     
 
-    if (index < 0; || index > vec->length) return 0; // 插入的位置不在顺序表中
+    if (index < 0 || index > vec->length) return 0; // 插入的位置不在顺序表中
 
     // 2. 插入位置 index 后面的元素向后移动一位
     // 错误写法,会覆盖后面的元素
@@ -71,7 +69,7 @@ int  insert(Vector *vec, int index, int value) {
     // }
 
     // 应该倒着遍历 
-     for(int i = vec->length -1; i < index; i--) {
+     for(int i = vec->length -1; i > index; i--) {
           vec->data[i] = vec->data[i-1];
      }
 
@@ -92,7 +90,7 @@ int  insert(Vector *vec, int index, int value) {
 int erase(Vector *vec, int index) {
     // 1. 判断那种情况不允许删除
     if (vec == NULL) return 0;      // 传入的是空指针
-    if (vec == length) return 0;    // 顺序表中没有元素
+    if (vec->length == 0) return 0;    // 顺序表中没有元素
     if (index < 0 || index >= vec->length);  // 删除的位置越界
     // 2. 循环向前移动一位
     for (int i = index + 1; i < vec->length; i++) {
@@ -114,6 +112,7 @@ void output(Vector *vec) {
          if (i != 0) printf(", ");
          printf("%d",vec->data[i]);
     }
+
     printf("]\n");
     return ;
 }
@@ -129,7 +128,8 @@ void clear(Vector *vec) {
     free(vec->data);
     
     // 再销毁vec本身
-    free(vec)
+    free(vec);
+    return ;
 }
 
 
@@ -137,16 +137,16 @@ void clear(Vector *vec) {
 // main
 // *********************************************
 int main() {
-    #define MAX_OP 1 
+    #define MAX_OP 20
     srand(time(0));
 
     // 操作类型，操作位置，操作值
     int op,index,value;
 
-    Vector *vec = init(MAX_OP)
+    Vector *vec = init(MAX_OP);
     for (int i = 0; i < MAX_OP; i++) {
-        op = rand() % 2;
-        index = rand() % vec->length + 1;
+        op = rand() % 2;        //随机产生的数字 模2 得到的结果是 0/1
+        index = rand() % (vec->length + 1);
         value = rand() % 100;
         switch (op) {
             // 插入操作
@@ -156,17 +156,12 @@ int main() {
             } break;
             // 删除操作
             case 1: {
-                printf("erase item at %d at from vector \n",index);
+                printf("erase item at %d from vector \n",index);
                 erase(vec,index);
             } break;
         }
         output(vec);
     }
-
-
-
-
-
 
     return 0;
 }
