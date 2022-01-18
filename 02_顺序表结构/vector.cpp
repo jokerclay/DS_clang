@@ -33,6 +33,7 @@ Vector *init(int n) {
 /*  这样写有bug
 int expand(Vector *vec) {
     vec->size *= 2;
+    // realloc 失败返回 NULL 会覆盖原来 vec->data 的地址, 造成内存泄漏
     vec->data = (int *)realloc(vec->data,sizeof(int) * vec->size);
     return 1;
 }
@@ -41,7 +42,9 @@ int expand(Vector *vec) {
 int expand(Vector *vec) {
     int new_size = vec->size * 2;
     int *p = (int *)realloc(vec->data,sizeof(int) * vec->size);
+    // 扩容失败
     if (p == NULL) return 0;
+    // 否则
     vec->size = new_size;
     vec->data = p;
     return 1;
@@ -143,26 +146,26 @@ int main() {
     // 操作类型，操作位置，操作值
     int op,index,value;
 
-    Vector *vec = init(MAX_OP);
+    Vector *vec = init(1);
     for (int i = 0; i < MAX_OP; i++) {
-        op = rand() % 2;        //随机产生的数字 模2 得到的结果是 0/1
-        index = rand() % (vec->length + 1);
+        op = rand() % 4;        //随机产生的数字 模2 得到的结果是 0/1
+        index = rand() % (vec->length + 3);
         value = rand() % 100;
         switch (op) {
             // 插入操作
+            case 2: 
+            case 3: 
             case 0: {
                 printf("insert %d at %d to vector \n",value,index);
                 insert(vec,index,value);
             } break;
             // 删除操作
-            case 1: {
+            case 1:{
                 printf("erase item at %d from vector \n",index);
                 erase(vec,index);
             } break;
         }
         output(vec);
     }
-
     return 0;
 }
-
