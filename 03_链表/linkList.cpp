@@ -131,18 +131,17 @@ int main() {
     srand(time(0));
     ListList *l = init_linklist();
     for (int i = 0; i < MAX_OP; i++) {
-        int op = rand() % 4;
+        int op = rand() % 3;
         int index = rand() % (l->length + 1);
         int value = rand() % 100;
         switch (op){
             case 0:
-            case 1:
-            case 2: {
+            case 1: {
                 printf("insert %d at %d to ListList = %d\n",
                         value,index,insert(l,index,value));
             } break;
-            case 3: {
-                printf("erase item at %d from ListList = %d",
+            case 2: {
+                printf("erase item at %d from ListList = %d\n",
                         index,erase(l,index));
             } break;
         };
@@ -152,6 +151,7 @@ int main() {
     
     }
 
+    clear_linklist(l);
     return 0;
 }
 
