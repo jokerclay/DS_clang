@@ -40,8 +40,6 @@ data_type = xxx;      -->             data_type = xxx;
 
 
 
-
-
 # 栈
 ### 结构定义 
 **连续的存储区去存储数据**
@@ -78,7 +76,7 @@ top = 3;            -->   +1      top = 4;
 data_type = xxx;    -->           data_type = xxx;
 ```
 
-```
+```c
 /*
  * Given a string containing just the character '(' ')' '{' '}' ['' ']' 
  * determine if the input string is vaild .
@@ -141,12 +139,107 @@ bool isValid(char *s) {
 
 每三个之间最大值 :
 
+```
 6 3 2 5 4 1 7 4 2
 6 3 2
   3 2 5
     2 5 4
       5 4 1
+```
+```c
+/*
 
+   输入一个 长度为 n 的 整数序列，从中找出一段不超过 M 的连续子序列，使得整个序列的和最大
+   例如： 1， -3， 5， 1，-2， 3
+   当 m = 4 时, S = 5 + 1 -2 + 3 = 7
+   当 m = 2 或 3 时, S = 5 + 1 = 6
+
+   输入：
+        第一行两个数: n,m
+        第二行有 n 个数， 要求在 n 个数找到最大子序和
+   输出：
+        一个数：数出他们的最大子序和
+
+   样例输入： 6 4
+              1， -3， 5， 1，-2， 3
+
+   样例输出： 7 
+  
+ */
+
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+#define MAX_N 30000
+int q[MAX_N + 5], head, tail;
+long long arr[MAX_N +5];
+
+int main () {
+    long long n, m, ans;
+    for (int i = 0; i <= n; i++) cin >> arr[i], arr[i] += arr[i - 1];
+    head = tail = 0;
+    q[tail++] = 0;
+    ans = arr[1];
+
+    for (int i = 1; i <= n; i++) {
+        ans = max(ans, arr[i] - arr[q[head]]);
+        while (tail - head && arr[q[tail-1]] >= arr[i]) tail--;
+        q[tail++] = i;
+        if (q[head] == i - m) head++;
+    }
+
+    cout << ans << endl;
+    return 0;
+}
+
+
+```
+
+
+# 单调栈
+## 单调栈可以解决什么问题 ？
+## ---->维护区间最近大于或小于关系
+
+```c
+/*
+找到左边第一个比它大的数
+
+INF 6  4  3  5  2  7   1  9 
+   INF 6  4  6  5 INF  7 INF
+    单调递增维护最近大于
+    单调递减维护最近小于
+*/
+
+/*
+ 最大矩形面积
+ 给定从左到右有多个矩形，矩形的宽度都为 1， 长度不完全相等，这些矩形相连，连成一排
+ 求在这些矩形包括的范围内能得到的最大面积的矩形，打印出该面积，所求矩形可横跨多个
+ 矩形， 但不能超出原有矩形所确定的范围
+
+
+ 输入：
+      输入共一行，第一个数表示举行的个数 N, 接下来 N 个数表示矩形的大小 (1 <= N <= 100000>)
+ 输出：
+      输出最大矩形的面积
+
+ 样例输入：
+
+
+ 样例输出：
+
+*/
+
+
+
+
+
+
+
+
+
+
+```
 
 
 
