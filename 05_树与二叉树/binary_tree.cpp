@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-using namespace std;
 
 // *********************************************
 // 二叉树的结构定义
@@ -10,9 +9,8 @@ using namespace std;
 // 封装节点
 typedef struct Node {
     int value;                          // 数据域
-    struct Node *lchild, *rchild;       // 左孩子，右孩子
+    struct Node *lchild, *rchild;       // 两个指针域,左孩子，右孩子
 } Node;
-
 
 // 封装树
 typedef struct Tree {
@@ -30,34 +28,14 @@ Node *getNewNode(int value) {
 
     Node *p = (Node *)malloc(sizeof(Node));
     p->value = value;
-    p->lchild = rchild = NULL;
+    p->lchild = p->rchild = NULL;
     return p;
-}
-
-
-// *********************************************
-// insert 操作
-// *********************************************
-// 排序二叉树 -> 平衡二叉排序树  
-// 排序二叉树: 如果插入的值比根节点小，向左子树中插入，否则向右子树中插入
-
-Node *insertNode(Node *node, int value) {
-    if (root == NULL) getNewNode(value);
-    if (root->value = value) return root;
-    else root->rchild = insertNode(root->rchild, value);
-    return root;
-}
-
-void insert(Tree *tree, int value) {
-    tree->root = insertNode(tree->node, value);
-    return ;
 }
 
 // *********************************************
 // 二叉树形结构的初始化
 // *********************************************
-Tree getNewTree() {
-
+Tree *getNewTree() {
     Tree *tree =  (Tree *)malloc(sizeof(Tree));     // 开辟树的内存空间
     tree->n = 0;                                    // 树的节点数为 0
     tree->root = NULL;                              // 树的节地址初始化为 NULL
@@ -76,6 +54,7 @@ void clearNode(Node *node) {
     clearNode(node->lchild);
     clearNode(node->rchild);
     free(node);
+    return ;
 
 }
 
@@ -92,20 +71,46 @@ void clearTree(Tree *tree) {
 void outputNode(Node *root) {
     if (root == NULL) return ;
     printf("%d",root->value);
-    // 左子树和右子树都为 NULL
+    // 左子树和右子树都为 NULL，不用输出子树信息
     if (root->lchild == NULL && root->rchild == NULL) return ;
     printf("(");
     outputNode(root->lchild);
     printf(",");
     outputNode(root->rchild);
     printf(")");
-    printf("\n");
 }
 
 
-void output(Tree *tree) {
+void outputTree(Tree *tree) {
     printf("tree (%d) = ", tree->n);
     outputNode(tree->root);
+    printf("\n");
+    return ;
+}
+
+
+
+// *********************************************
+// insert 操作
+// *********************************************
+// 排序二叉树 -> 平衡二叉排序树  
+// 排序二叉树: 如果插入的值比根节点小，向左子树中插入，否则向右子树中插入
+
+Node *insertNode(Node *root, int value, int *ret) {
+    if (root == NULL) {
+        *ret = 1;
+        return getNewNode(value);
+    }
+    if (root->value = value) return root;
+    if (root->value > value) root->lchild = insertNode(root->lchild,value,ret);
+    else root->rchild = insertNode(root->rchild, value, ret);
+    return root;
+}
+
+void insert(Tree *tree, int value) {
+    int flag = 0;
+    tree->root = insertNode(tree->root, value, &flag);
+    tree->n += flag;
     return ;
 }
 
@@ -117,14 +122,13 @@ void output(Tree *tree) {
 int main () {
     srand(time(0));
     Tree *tree = getNewTree();
-    for (int i = 0; i < 0; i++) {
+
+    for (int i = 0; i < 10; i++) {
         int value = rand() % 100;
         insert(tree, value);
-        output(tree);
+        outputTree(tree);
     }
 
     return 0;
 }
-
-
 
