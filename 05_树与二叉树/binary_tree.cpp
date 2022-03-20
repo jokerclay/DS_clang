@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include <time.h>
 
+
+#define MAX_OPTION 10
+
 /*
  * 二叉树的结构定义
  *
@@ -125,8 +128,8 @@ Node *insertNode(Node *root, int value, int *ret) {
 
     if (root->value == value) return root;
 
-    if (root->value > value) root->rchild = insertNode(root->rchild, value, ret);
-    else root->lchild = insertNode(root->lchild, value, ret);
+    if (root->value > value) root->lchild = insertNode(root->lchild, value, ret);
+    else root->rchild = insertNode(root->rchild, value, ret);
     return root;
 }
 
@@ -137,28 +140,67 @@ void insert(Tree *tree, int value) {
     return ;
 }
 
-// 前序遍历
+/*
+ * 前序遍历
+ *
+ */
+
+void preorderNode(Node *node) {
+    if (node == NULL) return;
+    printf("%d ", node->value);
+    preorderNode(node->lchild);
+    preorderNode(node->rchild);
+    return ;
+}
+
+void preorder(Tree *tree) {
+     printf("preorder   : ");
+     preorderNode(tree->root);
+     printf("\n");
+     return ;
+ }
+ 
+ 
+/*
+ * 中序遍历
+ *
+ */
+
+void inorderNode(Node *node) {
+    if (node == NULL) return;
+    inorderNode(node->lchild);
+    printf("%d ", node->value);
+    inorderNode(node->rchild);
+    return ;
+}
+
+void inorder(Tree *tree) {
+     printf("inorder    : ");
+     inorderNode(tree->root);
+     printf("\n");
+     return ;
+ }
 
 
-// void preorder(Tree *tree) {
-// 
-//     printf("preorder : ");
-//     preorder (tree->root);
-//     printf("\n");
-// }
-// 
-// 
-// void preorderNode(Node *node) {
-//     if (node == NULL) return;
-//     preorder();
-// }
-// 
-// 
-// 
-// 中序遍历
+/*
+ * 后序遍历
+ *
+ */
 
+void postorderNode(Node *node) {
+    if (node == NULL) return;
+    postorderNode(node->lchild);
+    postorderNode(node->rchild);
+    printf("%d ", node->value);
+    return ;
+}
 
-// 后序遍历
+void postorder(Tree *tree) {
+     printf("post order : ");
+     postorderNode(tree->root);
+     printf("\n");
+     return ;
+ }
 
 
 
@@ -174,22 +216,23 @@ int main () {
     Tree *tree = getNewTree();
 
     // 向二叉树中随机插入 10 个值，每插入一个就打印一次
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < MAX_OPTION; i++) {
         int value = rand() % 100;
         insert(tree, value);
         outputTree(tree);
     }
+    printf("\n");
 
-// 前序遍历
-//     preorder(tree);
+    // 前序遍历
+    preorder(tree);
 
-// 中序遍历
-//     inorder(tree);
+    // 中序遍历
+    inorder(tree);
 
-// 后序遍历
-//     postorder(tree);
+    // 后序遍历
+    postorder(tree);
 
-// 清空树
+    // 清空树
     clearTree(tree);
 
     return 0;
