@@ -61,13 +61,26 @@ Node *insert(Node *root, int key) {
  */
 
 void build_thread(Node *root) {
+    if (root == NULL) return ;
 
-    // 
+    //静态的局部变量记录之前所 处理的子树的最后一个节点
+    static Node *pre = NULL;
+    // 先建立左子树的线索化
+    build_thread(root->lchild);
+    if (root->lchild == NULL) {
+        root->lchild = pre;
+        root->ltag = THREAD;
+    }
 
+    if (pre != NULL && pre->rchild == NULL) {
+        pre->rchild  = root;
+        pre->rtag = THREAD;
+    }
 
-
-
-
+    // 更新 pre 节点
+    pre = root;
+    build_thread(root->rchild);
+    return ;
 }
 
 
@@ -80,12 +93,12 @@ void inorder(Node *root) {
     // 如果树为空，返回
     if (root == NULL) return ;
 
-    // 如果左边是正常的边
+    // 如果左边是正常的边,中序遍历左子树
     if (root->ltag == NORMAL) inorder(root->lchild);
 
     printf("%d ", root->key);
 
-    // 如果右边是正常的边
+    // 如果右边是正常的边, 中序遍历右子树
     if (root->rtag == NORMAL) inorder(root->rchild);
 
     return;
@@ -108,6 +121,25 @@ void clearNode(Node *root) {
 
 }
 
+Node *leftMost(Node *p) {
+    while(p && p->ltag == NORMAL && p->lchild)  p = p->lchild;
+    return p;
+}
+
+// 沿着线索化后的二叉树的线索输出二叉树
+void output(Node *root) {
+    Node *p = leftMost(root);
+    while(p) {
+        printf("%d ", p->key);
+        if (p->rtag == THREAD) {
+            p = p->rchild;
+        } else {
+            p = leftMost(p->rchild);
+        }
+    }
+    printf("\n");
+    return ;
+}
 
 
 
@@ -129,6 +161,9 @@ int main() {
 
     inorder(root);
     printf("\n");
+
+    // 沿着线索化后的二叉树的线索输出二叉树
+    output(root);
 
     clearNode(root);
     return 0;
