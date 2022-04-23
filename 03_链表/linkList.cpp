@@ -66,6 +66,7 @@ void clear_linklist (ListList *l) {
         clear_listnode(p);
         p = q;
     }
+    
     free(l);
     return ;
 }
