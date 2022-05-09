@@ -167,7 +167,7 @@ int main() {
 
 ```
 
-#RES
+# RES
 ```txt
 binary_search_1(arr1,10, 11) = 4
 binary_search_2(arr2,10) = 2
